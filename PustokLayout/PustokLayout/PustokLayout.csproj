@@ -17,6 +17,7 @@
 
   <ItemGroup>
     <Folder Include="Areas\Manage\ViewModels\" />
+    <Folder Include="wwwroot\assets\image\bg-images\sliders\" />
   </ItemGroup>
 
 </Project>
