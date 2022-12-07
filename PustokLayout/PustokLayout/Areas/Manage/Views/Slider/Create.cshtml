@@ -42,7 +42,7 @@
                     </div>
                     <div class="form-group">
                         <label asp-for="ImageFile">ImageFile</label>
-                        <textarea asp-for="ImageFile" type="text" class="form-control"></textarea>
+                        <input asp-for="ImageFile" type="file" class="form-control">
                         <span class="text-danger" asp-validation-for="ImageFile"></span>
                     </div>
                     <button type="submit" class="btn btn-primary">Submit</button>

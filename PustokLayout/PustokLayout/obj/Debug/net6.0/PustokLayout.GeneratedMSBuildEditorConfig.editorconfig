@@ -15,6 +15,18 @@ build_property.GenerateRazorMetadataSourceChecksumAttributes =
 build_property.MSBuildProjectDirectory = C:\Users\Ravenscroft\3D Objects\Back-end\Pustok\PustokLayout\PustokLayout
 build_property._RazorSourceGeneratorDebug = 
 
+[C:/Users/Ravenscroft/3D Objects/Back-end/Pustok/PustokLayout/PustokLayout/Areas/Manage/Views/Book/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcTWFuYWdlXFZpZXdzXEJvb2tcQ3JlYXRlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Ravenscroft/3D Objects/Back-end/Pustok/PustokLayout/PustokLayout/Areas/Manage/Views/Book/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcTWFuYWdlXFZpZXdzXEJvb2tcRWRpdC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Ravenscroft/3D Objects/Back-end/Pustok/PustokLayout/PustokLayout/Areas/Manage/Views/Book/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcTWFuYWdlXFZpZXdzXEJvb2tcSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/Ravenscroft/3D Objects/Back-end/Pustok/PustokLayout/PustokLayout/Areas/Manage/Views/Dashboard/Error.cshtml]
 build_metadata.AdditionalFiles.TargetPath = QXJlYXNcTWFuYWdlXFZpZXdzXERhc2hib2FyZFxFcnJvci5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
