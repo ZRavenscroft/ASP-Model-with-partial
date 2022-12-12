@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using PustokLayout.DAL;
+using PustokLayout.Models;
 using PustokLayout.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,8 +11,16 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<PustokContext>(opt =>
 {
-    opt.UseSqlServer(@"Server=DESKTOP-DARB30P\SQLEXPRESS01;Database=PustokTable;Trusted_Connection=TRUE");
+    opt.UseSqlServer(@"Server=DESKTOP-DARB30P\SQLEXPRESS;Database=PustokLayout;Trusted_Connection=TRUE");
 });
+
+builder.Services.AddIdentity<AppUser, IdentityRole>(opt =>
+{
+    opt.Password.RequireDigit = false;
+    opt.Password.RequiredLength = 8;
+    opt.Password.RequireNonAlphanumeric = false;
+}).AddDefaultTokenProviders().AddEntityFrameworkStores<PustokContext>();
+
 builder.Services.AddScoped<LayoutService>();
 
 var app = builder.Build();
