@@ -11,7 +11,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<PustokContext>(opt =>
 {
-    opt.UseSqlServer(@"Server=DESKTOP-DARB30P\SQLEXPRESS;Database=PustokLayout;Trusted_Connection=TRUE");
+    opt.UseSqlServer(@"Server=DESKTOP-DARB30P\SQLEXPRESS;Database=NewPustok;Trusted_Connection=TRUE");
 });
 
 builder.Services.AddIdentity<AppUser, IdentityRole>(opt =>
@@ -39,6 +39,7 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseAuthorization();
+app.UseAuthentication();
 
 app.MapControllerRoute(
     name: "areas",
