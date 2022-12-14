@@ -1,6 +1,7 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿    using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using PustokLayout.DAL;
 using PustokLayout.Models;
 using PustokLayout.ViewModels;
@@ -112,10 +113,70 @@ namespace PustokLayout.Controllers
 
             return RedirectToAction("login");
         }
+        [Authorize(Roles = "Member")]
+        public async Task<IActionResult> Profile()
+        {
+            AppUser user = await _userManager.FindByNameAsync(User.Identity.Name);
+
+            MemberUpdateViewModel memberVM = new MemberUpdateViewModel
+            {
+                Username = user.UserName,
+                Fullname = user.Fullname,
+                Email = user.Email,
+            };
+            return View(memberVM);
+        }
+        [Authorize(Roles = "Member")]
         [HttpPost]
         public async Task<IActionResult> Profile(MemberUpdateViewModel memberVM)
         {
-            return Ok(memberVM);
+            AppUser user = await _userManager.FindByNameAsync(User.Identity.Name);
+
+            if (user == null)
+                return RedirectToAction("login");
+
+            if (memberVM.Username.ToUpper() != user.NormalizedUserName && _pustokContext.Users.Any(x => x.NormalizedUserName == memberVM.Username.ToUpper()))
+                ModelState.AddModelError("Username", "Username has already taken");
+
+            if (memberVM.Email.ToUpper() != user.NormalizedEmail && _pustokContext.Users.Any(x => x.NormalizedEmail == memberVM.Email.ToUpper()))
+                ModelState.AddModelError("Email", "Email has already  taken");
+
+            if (!ModelState.IsValid)
+                return View();
+
+            if (memberVM.Password != null)
+            {
+                if (memberVM.CurrentPassword == null || !await _userManager.CheckPasswordAsync(user, memberVM.CurrentPassword))
+                {
+                    ModelState.AddModelError("CurrentPassword", "CurrentPassword is not correct!");
+                    return View();
+                }
+
+                var restult = await _userManager.ChangePasswordAsync(user, memberVM.CurrentPassword, memberVM.Password);
+
+                if (!restult.Succeeded)
+                {
+                    foreach (var err in restult.Errors)
+                    {
+                        ModelState.AddModelError("", err.Description);
+                    }
+                    return View();
+                }
+            }
+
+            user.UserName = memberVM.Username;
+            user.Fullname = memberVM.Fullname;
+            user.Email = memberVM.Email;
+
+            var result = await _userManager.UpdateAsync(user);
+            await _signInManager.SignInAsync(user, false);
+            return RedirectToAction("profile");
+        }
+        public async Task<IActionResult> Logout()
+        {
+            await _signInManager.SignOutAsync();
+
+            return RedirectToAction("login");
         }
     }
 }

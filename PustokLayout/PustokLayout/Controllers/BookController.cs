@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using PustokLayout.DAL;
 using PustokLayout.Models;
+using PustokLayout.ViewModels;
 
 namespace PustokLayout.Controllers
 {
@@ -20,5 +21,50 @@ namespace PustokLayout.Controllers
             //return Ok(book);
             return PartialView("_BookModalPartial", book);
         }
+        public async Task<IActionResult> Detail(int id)
+        {
+            Book book = _context.Books
+             .Include(x => x.Genre)
+                .Include(x => x.Author)
+                .Include(x => x.BookImages)
+                .FirstOrDefault(x => x.Id == id);
+
+            BookDetailViewModel detailVM = new BookDetailViewModel
+            {
+                Book = book,
+                ReviewVM = new ReviewCreateViewModel { BookId = id },
+                RelatedBooks = _context.Books.Where(x => x.GenreId == book.GenreId || x.AuthorId == book.AuthorId).Take(8).ToList()
+            };
+
+            if (book == null)
+                return NotFound();
+
+            return View(detailVM);
+        }
+        [HttpPost]
+        public IActionResult Review(ReviewCreateViewModel review)
+        {
+
+            if (!ModelState.IsValid)
+            {
+                Book book = _context.Books
+               .Include(x => x.Genre)
+               .Include(x => x.Author)
+               .Include(x => x.BookImages)
+               .FirstOrDefault(x => x.Id == review.BookId);
+
+                BookDetailViewModel detailVM = new BookDetailViewModel
+                {
+                    Book = book,
+                    RelatedBooks = _context.Books.Where(x => x.GenreId == book.GenreId || x.AuthorId == book.AuthorId).Take(8).ToList(),
+                    ReviewVM = review
+                };
+
+                return View("detail", detailVM);
+            }
+
+            return Ok(review);
+        }
+
     }
 }
