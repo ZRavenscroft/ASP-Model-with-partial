@@ -8,7 +8,7 @@
                                         "autoplay": true,
                                         "autoplaySpeed": 8000,
                                         "slidesToShow": 5,
-                                        "rows":2,
+                                        "rows":1,
                                         "dots":true
                                     }' data-slick-responsive='[
                                         {"breakpoint":1200, "settings": {"slidesToShow": 3} },
@@ -28,20 +28,21 @@
                         @spBook.Author.Fullname
                     </a>
                     <h3>
-                        <a href="product-details.html">
+                        <a asp-action="detail" asp-controller="book" asp-route-id="@spBook.Id">
                             @spBook.Name
                         </a>
                     </h3>
                 </div>
                 <div class="product-card--body">
                     <div class="card-image">
-                        <img src="~/assets/image/products/@(poster==null?"product-6.jpg":poster.Name)" alt="">
+
+                        <img src="~/assets/image/products/@(poster==null?"product-14.jpg":poster.Name)" alt="">
                         <div class="hover-contents">
                             <a href="product-details.html" class="hover-image">
-                                <img src="~/assets/image/products/@(hoverPoster==null?"product-6.jpg":hoverPoster.Name)" alt="">
+                                <img src="~/assets/image/products/@(hoverPoster==null?"product-14.jpg":hoverPoster.Name)" alt="">
                             </a>
                             <div class="hover-btns">
-                                <a href="cart.html" class="single-btn">
+                                <a asp-action="addtobasket" asp-controller="book" asp-route-bookId="@spBook.Id" class="single-btn add-to-basket">
                                     <i class="fas fa-shopping-basket"></i>
                                 </a>
                                 <a href="wishlist.html" class="single-btn">
@@ -50,7 +51,7 @@
                                 <a href="compare.html" class="single-btn">
                                     <i class="fas fa-random"></i>
                                 </a>
-                                <a asp-controller="book" asp-action="getbook" asp-route-id="spBook.Id" 
+                                <a asp-controller="book" asp-action="getbook" asp-route-id="@spBook.Id"
                                class="single-btn book-modal-btn">
                                     <i class="fas fa-eye"></i>
                                 </a>
@@ -60,7 +61,6 @@
                     <div class="price-block">
                         @if (spBook.DiscountPercent > 0)
                         {
-
                             <span class="price">£@((spBook.SalePrice * (100 - spBook.DiscountPercent) / 100).ToString("0.00"))</span>
                             <del class="price-old">£@spBook.SalePrice</del>
                             <span class="price-discount">@spBook.DiscountPercent.ToString("0.##")%</span>
@@ -69,11 +69,10 @@
                         {
                             <span class="price">£@spBook.SalePrice</span>
                         }
+
                     </div>
                 </div>
             </div>
         </div>
-
     }
-
 </div>

@@ -19,5 +19,6 @@ namespace PustokLayout.DAL
         public DbSet<Setting> Settings { get; set; }   
         public DbSet<AppUser> AppUsers { get; set; }
         public DbSet<Review> Reviews { get; set; }
+        public DbSet<BasketItem> BasketItems { get; set; }
     }
 }

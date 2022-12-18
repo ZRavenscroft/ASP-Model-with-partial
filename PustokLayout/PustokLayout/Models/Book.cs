@@ -18,18 +18,20 @@ namespace PustokLayout.Models
         public decimal DiscountPercent { get; set; }
         public bool IsSpecial { get; set; }
         public bool IsNew { get; set; }
+        public byte AvgRate { get; set; }
 
         [NotMapped]
         public IFormFile? PosterFile { get; set; }
         [NotMapped]
         public IFormFile? HoverPosterFile { get; set; }
         [NotMapped]
-        public List<IFormFile>? ImageFiles { get; set; }
+        public List<IFormFile>? ImageFiles { get; set; } = new List<IFormFile>();
         [NotMapped]
-        public List<int>? BookImageIds { get; set; }
+        public List<int>? BookImageIds { get; set; } = new List<int>();
 
         public Author? Author { get; set; }
         public Genre? Genre { get; set; }
         public List<BookImage>? BookImages { get; set; }
+        public List<Review>? Reviews { get; set; }
     }
 }
