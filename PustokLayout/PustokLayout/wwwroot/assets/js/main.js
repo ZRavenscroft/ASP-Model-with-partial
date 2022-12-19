@@ -5,12 +5,30 @@ $(document).on("click", ".book-modal-btn", function (e) {
     let url = $(this).attr("href");
 
     fetch(url)
-        //.then(response => response.json())
         .then(response => response.text())
         .then(data => {
-            //$(".modal-content .product-title").text(data.name)
+            console.log(data)
             $("#quickModal .modal-dialog").html(data)
         })
 
     $("#quickModal").modal("show")
+
+})
+
+$(document).on("click", ".add-to-basket", function (e) {
+    e.preventDefault();
+
+    let url = $(this).attr("href");
+
+    fetch(url)
+        .then(response => {
+            if (!response.ok) {
+                alert("Mehsul bitib!")
+            }
+            else {
+                return response.text();
+            }
+        }).then(html => {
+            $("#basket-block").html(html)
+        })
 })

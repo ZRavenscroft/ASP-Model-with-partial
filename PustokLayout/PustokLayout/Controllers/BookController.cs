@@ -90,15 +90,6 @@ namespace PustokLayout.Controllers
 
             return RedirectToAction("detail", new { id = book.Id });
         }
-
-        //public IActionResult GetId()
-        //{
-        //    var id = User.FindFirstValue(ClaimTypes.Name);
-
-        //    return Ok(id);
-        //}
-
-
         public async Task<IActionResult> AddToBasket(int bookId, int count = 1)
         {
             AppUser user = null;
