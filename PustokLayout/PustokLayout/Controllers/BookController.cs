@@ -14,26 +14,34 @@ namespace PustokLayout.Controllers
     {
         private readonly PustokContext _context;
         private readonly UserManager<AppUser> _userManager;
+
         public BookController(PustokContext context, UserManager<AppUser> userManager)
         {
             _context = context;
             _userManager = userManager;
         }
-        
+
         public IActionResult GetBook(int id)
         {
-            Book book = _context.Books.Include(x=>x.BookImages).FirstOrDefault(x=>x.Id==id);
+            Book book = _context.Books.Include(x => x.Genre).Include(x => x.BookImages).FirstOrDefault(x => x.Id == id);
 
-            //return Ok(book);
             return PartialView("_BookModalPartial", book);
         }
+
         public async Task<IActionResult> Detail(int id)
         {
             Book book = _context.Books
-             .Include(x => x.Genre)
+                .Include(x => x.Genre)
                 .Include(x => x.Author)
                 .Include(x => x.BookImages)
+                .Include(x => x.Reviews).ThenInclude(x => x.AppUser)
                 .FirstOrDefault(x => x.Id == id);
+
+            if (book == null)
+            {
+                TempData["error"] = "Book yoxdur";
+                return RedirectToAction("index", "home");
+            }
 
             BookDetailViewModel detailVM = new BookDetailViewModel
             {
@@ -42,11 +50,18 @@ namespace PustokLayout.Controllers
                 RelatedBooks = _context.Books.Where(x => x.GenreId == book.GenreId || x.AuthorId == book.AuthorId).Take(8).ToList()
             };
 
-            if (book == null)
-                return NotFound();
+            if (User.Identity.IsAuthenticated)
+            {
+                AppUser user = await _userManager.FindByNameAsync(User.Identity.Name);
 
+                if (user != null)
+                {
+                    detailVM.HasReview = book.Reviews.Any(x => x.AppUserId == user.Id);
+                }
+            }
             return View(detailVM);
         }
+
         [Authorize(Roles = "Member")]
         [HttpPost]
         public async Task<IActionResult> Review(ReviewCreateViewModel reviewVM)
@@ -99,15 +114,12 @@ namespace PustokLayout.Controllers
             {
                 user = await _userManager.FindByNameAsync(User.Identity.Name);
             }
-
-
             if (!_context.Books.Any(x => x.Id == bookId && x.StockStatus))
             {
                 return NotFound();
             }
 
             BasketViewModel basket = new BasketViewModel();
-
 
             if (user != null)
             {
@@ -179,13 +191,8 @@ namespace PustokLayout.Controllers
                 {
                     basketCookieItem.Count++;
                 }
-
-
                 var jsonStr = JsonConvert.SerializeObject(basketCookieItems);
                 HttpContext.Response.Cookies.Append("basket", jsonStr);
-
-
-
                 foreach (var item in basketCookieItems)
                 {
                     Book book = _context.Books.Include(x => x.BookImages).FirstOrDefault(x => x.Id == item.BookId);
@@ -201,8 +208,6 @@ namespace PustokLayout.Controllers
                     basket.TotalPrice += item.Count * (itemVM.Book.SalePrice * (100 - itemVM.Book.DiscountPercent) / 100);
                 }
             }
-
-
 
             return PartialView("_BasketPartial", basket);
         }

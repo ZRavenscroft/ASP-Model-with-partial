@@ -27,7 +27,9 @@
 </head>
 
 <body>
-
+    @if(TempData["error"]!=null){
+        <input type="hidden" value="@TempData["error"]" id="toastr-error"/>
+    }
     <div class="site-wrapper" id="top">
         <div class="site-header d-none d-lg-block">
             <div class="header-middle pt--10 pb--10">
@@ -45,6 +47,7 @@
                                 </div>
                                 <div class="text">
                                     <p>Free Support 24/7</p>
+                                    @*<p class="font-weight-bold number">@settings["SupportPhone"]</p>*@
                                 </div>
                             </div>
                         </div>
@@ -213,7 +216,7 @@
                                     <ul class="category-menu">
                                         @foreach (var genre in genres)
                                         {
-                                                <li class="cat-item "><a href="#">@genre.Name</a></li>
+                                            <li class="cat-item "><a href="#">@genre.Name</a></li>
                                         }
                                     </ul>
                                 </div>
@@ -231,18 +234,18 @@
                                     <div class="login-block">
                                         @if (User.Identity.IsAuthenticated && User.IsInRole("Member"))
                                         {
-                                                <a asp-action="profile" asp-controller="account" class="font-weight-bold">@user.Fullname</a> <br>
-                                                <span></span>
+                                            <a asp-action="profile" asp-controller="account" class="font-weight-bold">@user.Fullname</a> <br>
+                                            <span></span>
 
-                                                <a asp-action="logout" asp-controller="account">logout</a>
+                                            <a asp-action="logout" asp-controller="account">logout</a>
 
                                         }
                                         else
                                         {
-                                                <a asp-action="login" asp-controller="account" class="font-weight-bold">Login</a> <br>
-                                                <span>or</span>
+                                            <a asp-action="login" asp-controller="account" class="font-weight-bold">Login</a> <br>
+                                            <span>or</span>
 
-                                                <a asp-action="register" asp-controller="account">Register</a>
+                                            <a asp-action="register" asp-controller="account">Register</a>
                                         }
 
                                     </div>
@@ -873,10 +876,37 @@
     <script src="~/assets/js/plugins.js"></script>
     <script src="~/assets/js/ajax-mail.js"></script>
     <script src="~/assets/js/custom.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script>
+
+         toastr.options = {
+            "closeButton": false,
+            "debug": false,
+            "newestOnTop": false,
+            "progressBar": false,
+            "positionClass": "toast-top-right",
+            "preventDuplicates": false,
+            "onclick": null,
+            "showDuration": "300",
+            "hideDuration": "1000",
+            "timeOut": "5000",
+            "extendedTimeOut": "1000",
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "fadeIn",
+            "hideMethod": "fadeOut"
+        }
+
+
+          $(document).ready(function(){
+                if($("#toastr-error").length){
+                    toastr["error"]($("#toastr-error").val())
+                }
+          })
+    </script>
     <script src="~/assets/js/main.js"></script>
 
     @RenderSection("Scripts",required:false);
-
 </body>
 
 
